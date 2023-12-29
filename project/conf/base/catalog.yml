@@ -38,3 +38,8 @@ y_test_drift:
   type: pickle.PickleDataset
   filepath: data/04_split_drift/X_test_drift.pkl
 
+model:
+  type: pickle.PickleDataset
+  filepath: data/05_model/model.pkl
+
+
