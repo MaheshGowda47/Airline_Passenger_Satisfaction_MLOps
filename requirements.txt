@@ -15,6 +15,9 @@ seaborn~=0.12.1
 numpy==1.26.1
 pandas==2.1.2
 matplotlib==3.8.1
+evidently
+mlflow
+mlflow[extras]
 
 
 -e .

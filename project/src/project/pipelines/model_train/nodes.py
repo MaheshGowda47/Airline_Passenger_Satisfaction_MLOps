@@ -28,11 +28,7 @@ def train_model(X_train, y_train) -> pd.DataFrame:
         # Initialize the Random Forest Classifier with specific hyperparameters
         model = RandomForestClassifier(
             criterion='entropy', 
-            max_features=None, 
-            min_samples_leaf=6, 
-            min_samples_split=6, 
-            n_estimators=900
-        )
+            max_features=None,)
         
         # Train the model on the provided training data
         model.fit(X_train, y_train)
@@ -43,3 +39,4 @@ def train_model(X_train, y_train) -> pd.DataFrame:
         # Log the error and raise the exception
         logging.error(f"Error occurred in train_model: {e}")
         raise e
+

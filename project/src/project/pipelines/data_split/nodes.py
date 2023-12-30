@@ -20,28 +20,11 @@ def split_data_for_evaluation(pre_data: pd.DataFrame) -> pd.DataFrame:
         X = pre_data.drop(["Satisfaction"], axis=1)
         y = pre_data["Satisfaction"]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
         return X_train, X_test, y_train, y_test
     except Exception as e:
         logging.error(f"Error occurred in split_data_for_evaluation: {e}")
         raise e
 
-def split_data_for_model_drift(pre_data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Splits the data into two parts to check for model drift.
-
-    Args:
-    - pre_data (pd.DataFrame): The input data.
-
-    Returns:
-    - X_train_drift, X_test_drift, y_train_drift, y_test_drift (pd.DataFrame): Split data for model drift check.
-    """
-    try:
-        X = pre_data.drop(["Satisfaction"], axis=1)
-        y = pre_data["Satisfaction"]
-        X_train_drift, X_test_drift, y_train_drift, y_test_drift = train_test_split(X, y, test_size=0.5, random_state=42)
-        return X_train_drift, X_test_drift, y_train_drift, y_test_drift
-    except Exception as e:
-        logging.error(f"Error occurred in split_data_for_model_drift: {e}")
-        raise e
 
 

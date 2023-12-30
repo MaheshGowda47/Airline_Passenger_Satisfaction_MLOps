@@ -22,22 +22,6 @@ y_test:
   type: pickle.PickleDataset
   filepath: data/03_split_evaluation/y_test.pkl
 
-X_train_drift:
-  type: pickle.PickleDataset
-  filepath: data/04_split_drift/X_train_drift.pkl
-
-X_test_drift:
-  type: pickle.PickleDataset
-  filepath: data/04_split_drift/X_test_drift.pkl
-
-y_train_drift:
-  type: pickle.PickleDataset
-  filepath: data/04_split_drift/y_train_drift.pkl
-
-y_test_drift:
-  type: pickle.PickleDataset
-  filepath: data/04_split_drift/X_test_drift.pkl
-
 model:
   type: pickle.PickleDataset
   filepath: data/05_model/model.pkl

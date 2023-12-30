@@ -18,17 +18,17 @@ def preprocessed_data(data) -> pd.DataFrame:
     data[col_to_encode] = data[col_to_encode].apply(encoder.fit_transform)
 
     # Interaction Features_1 [all through online service]
-    data["flight_service_1"] = ((data["Ease of Online Booking"] + data["Check-in Service"] + data["Online Boarding"]) / 3).round(2)
+    data["flight_service_1"] = ((data["Ease of Online Booking"] + data["Check-in Service"] + data["Online Boarding"]) / 3).round().astype(int)
     col_drop1 = ["Ease of Online Booking", "Check-in Service", "Online Boarding"]
     data = data.drop(columns=col_drop1, axis=1)
 
     # Interaction Features_2 [service in airline infrastructure]
-    data["flight_service_2"] = ((data["On-board Service"] + data["Seat Comfort"] + data["Food and Drink"] + data["Cleanliness"] + data["Leg Room Service"]) / 5).round(2)
+    data["flight_service_2"] = ((data["On-board Service"] + data["Seat Comfort"] + data["Food and Drink"] + data["Cleanliness"] + data["Leg Room Service"]) / 5).round().astype(int)
     col_drop2 = ["On-board Service", "Seat Comfort", "Food and Drink", "Cleanliness", "Leg Room Service"]
     data = data.drop(columns=col_drop2, axis=1)
 
     # Interaction Features_3 [manual service of airlines]
-    data["flight_service_3"] = (data["In-flight Service"] + data["In-flight Wifi Service"] + data["In-flight Entertainment"] + data["Baggage Handling"]) / 4
+    data["flight_service_3"] = ((data["In-flight Service"] + data["In-flight Wifi Service"] + data["In-flight Entertainment"] + data["Baggage Handling"]) / 4).round().astype(int)
     col_drop3 = ["In-flight Service", "In-flight Wifi Service", "In-flight Entertainment", "Baggage Handling"]
     data = data.drop(columns=col_drop3, axis=1)
 
