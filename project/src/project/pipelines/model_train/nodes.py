@@ -26,9 +26,7 @@ def train_model(X_train, y_train) -> pd.DataFrame:
 
     try:
         # Initialize the Random Forest Classifier with specific hyperparameters
-        model = RandomForestClassifier(
-            criterion='entropy', 
-            max_features=None,)
+        model = RandomForestClassifier()
         
         # Train the model on the provided training data
         model.fit(X_train, y_train)

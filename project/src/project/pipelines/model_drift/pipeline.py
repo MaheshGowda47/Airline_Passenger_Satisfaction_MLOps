@@ -11,7 +11,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
         node(
             func=model_drift,
-            inputs=["X_train", "X_test", "y_train", "y_test"],
+            inputs="pre_data",
             outputs=None,
         )
     ])

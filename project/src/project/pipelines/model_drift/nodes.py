@@ -2,7 +2,6 @@
 This is a boilerplate pipeline 'model_drift'
 generated using Kedro 0.19.1
 """
-import os
 import logging
 import pandas as pd 
 from sklearn.ensemble import RandomForestClassifier
@@ -10,18 +9,21 @@ from evidently import ColumnMapping
 from evidently.report import Report
 from evidently.metric_preset import DataDriftPreset, TargetDriftPreset, ClassificationPreset
 
-def model_drift(X_train, X_test, y_train, y_test) -> None:
+
+def model_drift(pre_data: pd.DataFrame):
     try:
+        # Slicing the data
+        X_train = pd.DataFrame(pre_data.iloc[:64940, :12])
+        X_test = pd.DataFrame(pre_data.iloc[64940:, :12])
+        y_train = pd.Series(pre_data.iloc[:64940, -1])
+        y_test = pd.Series(pre_data.iloc[64940:, -1])
 
         # Data preparation
         reference = pd.concat([X_train, y_train], axis=1)
         current = pd.concat([X_test, y_test], axis=1)
 
         # Model training
-        model = RandomForestClassifier(
-            criterion='entropy', 
-            max_features=None, 
-        )
+        model = RandomForestClassifier()
         model.fit(X_train, y_train)
 
         # Make predictions
@@ -47,23 +49,21 @@ def model_drift(X_train, X_test, y_train, y_test) -> None:
         # Model Performance Report
         classification_performance = Report(metrics=[ClassificationPreset()])      
         classification_performance.run(reference_data=current, current_data=reference,column_mapping=column_mapping)
-        classification_performance.show()
         classification_performance.save("data/06_model_drift/model_report.html")
 
         # Data Drift Report
         data_drift = Report(metrics=[DataDriftPreset()])
         data_drift.run(current_data=reference, reference_data=current, column_mapping=column_mapping)
-        data_drift.show()
         data_drift.save("data/06_model_drift/data_drift_report.html")
 
         # Target Drift Report
         target_drift = Report(metrics=[TargetDriftPreset()])
         target_drift.run(current_data=reference, reference_data=current, column_mapping=column_mapping)
-        target_drift.show()
         target_drift.save("data/06_model_drift/target_drift_report.html")
 
+
         print("--Model_drift-->  - completed")
-        
+
     except Exception as e:
         logging.error(f"Error occurred in model_drift: {e}")
         raise e

@@ -6,16 +6,10 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
-# Function to preprocess data
 def preprocessed_data(data) -> pd.DataFrame:
     # Columns to drop 
     col_to_drop = ["ID", "Gate Location"] 
     data = data.drop(columns=col_to_drop, axis=1)
-
-    # Label encoding to object columns
-    encoder = LabelEncoder()
-    col_to_encode = ["Gender", "Customer Type", "Type of Travel", "Class", "Satisfaction"]
-    data[col_to_encode] = data[col_to_encode].apply(encoder.fit_transform)
 
     # Interaction Features_1 [all through online service]
     data["flight_service_1"] = ((data["Ease of Online Booking"] + data["Check-in Service"] + data["Online Boarding"]) / 3).round().astype(int)
@@ -32,10 +26,10 @@ def preprocessed_data(data) -> pd.DataFrame:
     col_drop3 = ["In-flight Service", "In-flight Wifi Service", "In-flight Entertainment", "Baggage Handling"]
     data = data.drop(columns=col_drop3, axis=1)
 
-    # Calculate percentiles
+    # Calculate percentiles for Flight Distance
     q1, q2, q3 = np.percentile(data["Flight Distance"], [25, 50, 75])
 
-    # Replace values based on percentiles
+    # Replace values based on Flight Distance percentiles
     data.loc[data['Flight Distance'] <= q1, 'Flight Distance'] = 0
     data.loc[(data['Flight Distance'] > q1) & (data['Flight Distance'] <= q2), 'Flight Distance'] = 1
     data.loc[(data['Flight Distance'] > q2) & (data['Flight Distance'] <= q3), 'Flight Distance'] = 2
@@ -47,7 +41,7 @@ def preprocessed_data(data) -> pd.DataFrame:
     data["Arrival Delay"] = data["Arrival Delay"].apply(lambda x: 0 if x=="nan" else x)
     data["Arrival Delay"] = data["Arrival Delay"].astype(float)
 
-    # Arrival and Departure Binning
+    # Arrival and Departure Binning for Arrival Delay
     q1, q2, q3 = np.percentile(data["Arrival Delay"], [25, 50, 75])
     data.loc[data["Arrival Delay"] <= q1, "Arrival Delay"] = 0
     data.loc[(data['Arrival Delay'] > q1) & (data['Arrival Delay'] <= q2), 'Arrival Delay'] = 1
@@ -55,14 +49,30 @@ def preprocessed_data(data) -> pd.DataFrame:
     data.loc[data['Arrival Delay'] > q3, 'Arrival Delay'] = 3  
     data['Arrival Delay'] = data['Arrival Delay'].astype(int)
 
+    # Departure Binning for Departure Delay
     q1, q2, q3 = np.percentile(data["Departure Delay"], [25, 50, 75])
     data.loc[data["Departure Delay"] <= q1, "Departure Delay"] = 0
     data.loc[(data['Departure Delay'] > q1) & (data['Departure Delay'] <= q2), 'Departure Delay'] = 1
     data.loc[(data['Departure Delay'] > q2) & (data['Departure Delay'] <= q3), 'Departure Delay'] = 2
     data.loc[data['Departure Delay'] > q3, 'Departure Delay'] = 3  
     data['Departure Delay'] = data['Departure Delay'].astype(int)
-    print(data.head(5))
+
+    # Label encoding to object columns
+    encoder = LabelEncoder()
+    col_to_encode = ["Gender", "Customer Type", "Type of Travel", "Class", "Satisfaction"]
+    data[col_to_encode] = data[col_to_encode].apply(encoder.fit_transform)
+    
+    # Reordering columns, moving 'Satisfaction' to the end
+    satisfaction_column = data.pop('Satisfaction')
+    data['Satisfaction'] = satisfaction_column
+
+    #nameing
     pre_data = data
+    print(pre_data.head(5))
+    print(pre_data.shape)
+
     return pre_data
+
+
 
 
