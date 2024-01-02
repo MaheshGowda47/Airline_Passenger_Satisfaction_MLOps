@@ -4,10 +4,12 @@ generated using Kedro 0.19.1
 """
 import logging
 import pandas as pd 
+from .report import set_column_mapping
+from .report import set_test_report
+from .report import set_model_performance
+from .report import set_classification_metrics
 from sklearn.ensemble import RandomForestClassifier
-from evidently import ColumnMapping
-from evidently.report import Report
-from evidently.metric_preset import DataDriftPreset, TargetDriftPreset, ClassificationPreset
+
 
 
 def model_drift(pre_data: pd.DataFrame):
@@ -30,43 +32,31 @@ def model_drift(pre_data: pd.DataFrame):
         reference_pred = model.predict(X_train)
         current_pred = model.predict(X_test)
 
-        # Column Mapping
-        target = "Satisfaction"
-        prediction = "prediction"
-        numerical_features = ['Age']
-        categorical_features = ['flight_service_1', 'flight_service_2', 'flight_service_3','Gender', 'Customer Type', 'Type of Travel',
-                       'Class', 'Flight Distance', 'Departure Delay', 'Arrival Delay', 'Departure and Arrival Time Convenience']
-        
+        # setting prediction column
         reference['prediction'] = reference_pred
         current['prediction'] = current_pred
-        
-        column_mapping = ColumnMapping()
-        column_mapping.target = target
-        column_mapping.prediction = prediction
-        column_mapping.numerical_features = numerical_features
-        column_mapping.categorical_features = categorical_features
 
-        # Model Performance Report
-        classification_performance = Report(metrics=[ClassificationPreset()])      
-        classification_performance.run(reference_data=current, current_data=reference,column_mapping=column_mapping)
-        classification_performance.save("data/06_model_drift/model_report.html")
+        # setting column mapping
+        column_mapping = set_column_mapping()
 
-        # Data Drift Report
-        data_drift = Report(metrics=[DataDriftPreset()])
-        data_drift.run(current_data=reference, reference_data=current, column_mapping=column_mapping)
-        data_drift.save("data/06_model_drift/data_drift_report.html")
+        # setting test report
+        test_report = set_test_report(reference, current, column_mapping)
+        test_report.save_html(r"data/06_model_drift/test_report.html")
 
-        # Target Drift Report
-        target_drift = Report(metrics=[TargetDriftPreset()])
-        target_drift.run(current_data=reference, reference_data=current, column_mapping=column_mapping)
-        target_drift.save("data/06_model_drift/target_drift_report.html")
+        # setting model performance
+        model_performance = set_model_performance(reference, current, column_mapping)
+        model_performance.save_html(r"data/06_model_drift/model_performance.html")
 
+        # setting class matrics
+        class_metrics = set_classification_metrics(reference, current, column_mapping)
+        class_metrics.save_html(r"data/06_model_drift/class_metics.html")
 
-        print("--Model_drift-->  - completed")
 
     except Exception as e:
         logging.error(f"Error occurred in model_drift: {e}")
         raise e
+    
+
 
 
 

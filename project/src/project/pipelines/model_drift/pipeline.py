@@ -13,5 +13,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             func=model_drift,
             inputs="pre_data",
             outputs=None,
+            # outputs=['classification_performance', 'data_drift', 'target_drift'],
         )
     ])
