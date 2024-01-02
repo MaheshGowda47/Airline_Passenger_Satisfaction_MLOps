@@ -66,10 +66,12 @@ def preprocessed_data(data) -> pd.DataFrame:
     satisfaction_column = data.pop('Satisfaction')
     data['Satisfaction'] = satisfaction_column
 
+
     #nameing
     pre_data = data
-    print(pre_data.head(5))
-    print(pre_data.shape)
+    pre_data.to_csv(r"/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/processed_data.csv")
+    # print(pre_data.head(5))
+    # print(pre_data.shape)
 
     return pre_data
 

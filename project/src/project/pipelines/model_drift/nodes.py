@@ -43,6 +43,7 @@ def model_drift(pre_data: pd.DataFrame):
         test_report = set_test_report(reference, current, column_mapping)
         test_report.save_html(r"data/06_model_drift/test_report.html")
 
+
         # setting model performance
         model_performance = set_model_performance(reference, current, column_mapping)
         model_performance.save_html(r"data/06_model_drift/model_performance.html")
@@ -51,7 +52,7 @@ def model_drift(pre_data: pd.DataFrame):
         class_metrics = set_classification_metrics(reference, current, column_mapping)
         class_metrics.save_html(r"data/06_model_drift/class_metics.html")
 
-
+        return test_report, model_performance, class_metrics
     except Exception as e:
         logging.error(f"Error occurred in model_drift: {e}")
         raise e

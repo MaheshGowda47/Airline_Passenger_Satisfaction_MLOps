@@ -12,7 +12,6 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=model_drift,
             inputs="pre_data",
-            outputs=None,
-            # outputs=['classification_performance', 'data_drift', 'target_drift'],
+            outputs=['test_report', 'model_performance', 'class_metrics'],
         )
     ])
