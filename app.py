@@ -83,6 +83,47 @@ def prediction():
         # Display an error message if an exception occurs
         st.error(e)
 
+
+def display_report(path:  str):
+    '''Display an evidently HTML report in streamlit
+
+    Args:
+       path: file path of the evidently HTML report
+    '''
+    with open(path) as file:
+        report = file.read()
+
+    st.components.v1.html(report, height=1000, width=1000, scrolling=True)
+
+def run_report():
+    test_report = st.checkbox("Test Report")
+    model_performance = st.checkbox("Model performance")
+    class_metrics = st.checkbox("Class metrics")
+
+
+    select_report = []
+    if test_report:
+        select_report.append('test_report')
+    if model_performance:
+        select_report.append('model_performance')
+    if class_metrics:
+        select_report.append('class_metrics')
+
+    if 'test_report' in select_report:
+        display_report("/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/06_model_drift/test_report.html")
+    if 'model_performance' in select_report:
+        display_report("/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/06_model_drift/model_performance.html")
+    if 'class_metrics' in select_report:
+        display_report("/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/06_model_drift/test_report.html")
+
+
+
 # Execute the prediction function
 if __name__ == "__main__":
-    prediction()
+    st.sidebar.title("Choose the option")
+    selction = st.sidebar.radio("Select an option", ['Prediction', 'Report'])
+
+    if selction == 'Prediction':
+        prediction()
+    if selction == 'Report':
+        run_report()
