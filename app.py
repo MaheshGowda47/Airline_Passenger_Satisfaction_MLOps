@@ -1,14 +1,19 @@
-import streamlit as st 
-import numpy as np 
-import pandas as pd 
+# Import necessary libraries
+import streamlit as st
+import numpy as np
+import pandas as pd
+import joblib
 
+# Load the dataset
 data = pd.read_csv(r"/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/01_raw/airline_passenger_satisfaction.csv")
 
+# Function to make predictions
 def prediction():
+    # Set the title for the app
     st.title("Airline Passenger Satisfaction")
 
     try:
-
+        # User input fields
         Gender = st.selectbox("Gender", ["Male", "Female"])
         Age = st.number_input("Age", min_value=0, max_value=85, key="age_input")
         Customer_Type = st.selectbox("Customer Type", ["First-time", "Returning"])
@@ -30,60 +35,54 @@ def prediction():
         In_flight_Wifi_Service = st.number_input("In-flight Wifi Service", min_value=0, max_value=5, key="in_flight_wifi_service_input")
         In_flight_Entertainment = st.number_input("In-flight Entertainment", min_value=0, max_value=5, key="in_flight_entertainment_input")
         Baggage_Handling = st.number_input("Baggage Handling", min_value=0, max_value=4, key="baggage_handling_input")
-        Satisfaction = st.selectbox("Satisfaction", ["Neutral or Dissatisfied", "Satisfied"])
-
+        
+        # Mapping categorical input to numerical values
         gender_map = {'Male': 0, 'Female': 1}
-        Customer_Type_map = {'First-time':0, 'Returning':1}
-        Type_of_Travel_map = {'Business':0, 'Personal':1}
-        class_map = {'Business':0, 'Economy':1, 'Personal':2}
-        Satisfaction_map = {'Neutral or Dissatisfied':0, 'Satisfied':1}
+        Customer_Type_map = {'First-time': 0, 'Returning': 1}
+        Type_of_Travel_map = {'Business': 0, 'Personal': 1}
+        class_map = {'Business': 0, 'Economy': 1, 'Economy Plus': 2}
 
         Gender = gender_map[Gender]
         Customer_Type = Customer_Type_map[Customer_Type]
         Type_of_Travel = Type_of_Travel_map[Type_of_Travel]
         Class = class_map[Class]
-        Satisfaction = Satisfaction_map[Satisfaction]
 
-        flight_service_1 = np.round((Ease_of_Online_Booking + Check_in_Service + Online_Boarding ) / 3)
+        # Calculating average values for certain features
+        flight_service_1 = np.round((Ease_of_Online_Booking + Check_in_Service + Online_Boarding) / 3)
         flight_service_2 = np.round((On_board_Service + Seat_Comfort + Food_and_Drink + Cleanliness + Leg_Room_Service) / 5)
         flight_service_3 = np.round((In_flight_Service + In_flight_Wifi_Service + In_flight_Entertainment + Baggage_Handling) / 4)
 
+        # Creating a DataFrame with user inputs
+        df = pd.DataFrame({
+            'Gender': [Gender],
+            'Age': [Age],
+            'Customer Type': [Customer_Type],
+            'Type of Travel': [Type_of_Travel],
+            'Class': [Class],
+            'Flight Distance': [Flight_Distance],
+            'Departure Delay': [Departure_Delay],
+            'Arrival Delay': [Arrival_Delay],
+            'Departure and Arrival Time Convenience': [Departure_and_Arrival_Time_Convenience],
+            'flight_service_1': [flight_service_1],
+            'flight_service_2': [flight_service_2],
+            'flight_service_3': [flight_service_3],
+        })
 
-        # Categorizing Flight Distance into bins
-        q1, q2, q3 = np.percentile(data["Flight Distance"], [25, 50, 75])
-        if Flight_Distance <= q1:
-            Flight_Distance = 0
-        elif q1 < Flight_Distance <= q2:
-            Flight_Distance = 1
-        elif q2 < Flight_Distance <= q3:
-            Flight_Distance = 2
-        else:
-            Flight_Distance = 3
-
-        # categorizing arrivaly delay into bins
-        q1, q2, q3 = np.percentile(data["Arrival Delay"], [25, 50, 75])
-        if Arrival_Delay <= q1:
-            Arrival_Delay = 0
-        elif Arrival_Delay > q1 and Arrival_Delay <= q2:
-            Arrival_Delay = 1
-        elif Arrival_Delay > q2 and Arrival_Delay <= q3:
-            Arrival_Delay = 2
-        else:
-            Arrival_Delay = 3
-
-        # categorizing departure delay into bins  
-        q1, q2, q3 = np.percentile(data["Departure Delay"], [25, 50, 75])
-        if Departure_Delay <= q1:
-            Departure_Delay = 0
-        elif Departure_Delay > q1 and Departure_Delay <= q2:
-            Departure_Delay = 1
-        elif Departure_Delay > q2 and Departure_Delay <= q3:
-            Departure_Delay = 2
-        else:
-            Departure_Delay = 3
+        # Perform prediction when the "Predict" button is clicked
+        if st.button("Predict"):
+            # Load the machine learning model
+            model = joblib.load("/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/05_model/model.pkl")
+            # Make prediction based on user input
+            output = model.predict(df)
+            # Determine the satisfaction level based on the prediction result
+            result = 'Satisfied' if output[0] == 1 else 'Neutral or Dissatisfied'
+            # Display the prediction result
+            st.success(f"Passenger is: {result}")
 
     except Exception as e:
+        # Display an error message if an exception occurs
         st.error(e)
 
+# Execute the prediction function
 if __name__ == "__main__":
     prediction()
