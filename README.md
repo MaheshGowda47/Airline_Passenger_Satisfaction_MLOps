@@ -8,7 +8,7 @@ The goal of creating an ML (Machine Learning) model using this dataset could be 
 
 ## 1.clone the repository in IDL
 ```bash
-git clone https://github.com/MaheshGowda47/Employee-Attriation-Rates-MLOps.git
+git clone https://github.com/MaheshGowda47/Airline_Passenger_Satisfaction_MLOps.git
 ```
 
 ## 2.Setting Up the Environment
@@ -42,6 +42,8 @@ cd project
 streamlit run app.py
 ```
 
-## App interface
+## streamlit interface
 
+```
 ![Alt text](output/streamlit-inteface.png)
+```
