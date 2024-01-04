@@ -1,8 +1,15 @@
-# Import necessary libraries
 import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
+
+# Set page configurations
+st.set_page_config(
+    page_title="Airline Passenger Satisfaction",
+    page_icon="✈️",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 # Load the dataset
 data = pd.read_csv(r"data/01_raw/airline_passenger_satisfaction.csv")
@@ -79,12 +86,13 @@ def prediction():
             # Display the prediction result
             st.success(f"Passenger is: {result}")
 
+
     except Exception as e:
         # Display an error message if an exception occurs
         st.error(e)
 
 
-def display_report(path:  str):
+def display_report(path: str):
     '''Display an evidently HTML report in streamlit
 
     Args:
@@ -99,7 +107,6 @@ def run_report():
     test_report = st.checkbox("Test Report")
     model_performance = st.checkbox("Model performance")
     class_metrics = st.checkbox("Class metrics")
-
 
     select_report = []
     if test_report:
@@ -116,14 +123,39 @@ def run_report():
     if 'class_metrics' in select_report:
         display_report("data/06_model_drift/test_report.html")
 
-
-
 # Execute the prediction function
 if __name__ == "__main__":
-    st.sidebar.title("Choose the option")
-    selction = st.sidebar.radio("Select an option", ['Prediction', 'Report'])
+    # Set background color and padding
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: #f4f4f4;
+            color: #333333;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .stButton button {
+            background-color: #008080;
+            color: white;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .stButton button:hover {
+            background-color: #005353;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    if selction == 'Prediction':
+    st.sidebar.title("Choose the option")
+
+    selection = st.sidebar.radio("Select an option", ['Prediction', 'Report'])
+
+    if selection == 'Prediction':
         prediction()
-    if selction == 'Report':
+    if selection == 'Report':
         run_report()
