@@ -20,11 +20,11 @@ def evaluate_model(model, X_test, y_test) -> None:
         accuracy = accuracy_score(y_test, y_pred)
         # print(f"Accuracy: {accuracy:.2f}")
 
-        print("\nClassification Report:")
+        # print("\nClassification Report:")
         class_report = classification_report(y_test, y_pred, output_dict=True)
         # print(classification_report(y_test, y_pred))
 
-        print("\nConfusion Matrix:")
+        # print("\nConfusion Matrix:")
         conf_matrix = confusion_matrix(y_test, y_pred)
         # print(conf_matrix)
 
@@ -48,7 +48,7 @@ def evaluate_model(model, X_test, y_test) -> None:
         metrics_df = pd.DataFrame([metrics_dict])
 
         # Convert DataFrame to HTML and save to a file
-        metrics_html = metrics_df.to_html("/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/Evaluate_report/metrics.html", index=False)
+        metrics_html = metrics_df.to_html("Evaluate_report/metrics.html", index=False)
 
     except Exception as e:
         # Log and raise an error in case of an exception during evaluation

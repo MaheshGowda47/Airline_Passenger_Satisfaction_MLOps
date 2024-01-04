@@ -5,7 +5,7 @@ import pandas as pd
 import joblib
 
 # Load the dataset
-data = pd.read_csv(r"/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/01_raw/airline_passenger_satisfaction.csv")
+data = pd.read_csv(r"data/01_raw/airline_passenger_satisfaction.csv")
 
 # Function to make predictions
 def prediction():
@@ -71,7 +71,7 @@ def prediction():
         # Perform prediction when the "Predict" button is clicked
         if st.button("Predict"):
             # Load the machine learning model
-            model = joblib.load("/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/05_model/model.pkl")
+            model = joblib.load("data/05_model/model.pkl")
             # Make prediction based on user input
             output = model.predict(df)
             # Determine the satisfaction level based on the prediction result
@@ -110,11 +110,11 @@ def run_report():
         select_report.append('class_metrics')
 
     if 'test_report' in select_report:
-        display_report("/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/06_model_drift/test_report.html")
+        display_report("data/06_model_drift/test_report.html")
     if 'model_performance' in select_report:
-        display_report("/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/06_model_drift/model_performance.html")
+        display_report("data/06_model_drift/model_performance.html")
     if 'class_metrics' in select_report:
-        display_report("/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/06_model_drift/test_report.html")
+        display_report("data/06_model_drift/test_report.html")
 
 
 

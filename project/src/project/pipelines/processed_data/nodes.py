@@ -69,7 +69,7 @@ def preprocessed_data(data) -> pd.DataFrame:
 
     #nameing
     pre_data = data
-    pre_data.to_csv(r"/root/MLOPS_PROJEST_WSL/Airline-Passenger-Satisfaction/project/data/processed_data.csv")
+    pre_data.to_csv(r"data/02_processed/processed_data.csv")
     # print(pre_data.head(5))
     # print(pre_data.shape)
 
